@@ -87,9 +87,3 @@ local_settings.py
 
 .env
 db.sqlite3
-
-# Do not commit migrations
-
-**/migrations/**
-!**/migrations
-!**/migrations/__init__.py
