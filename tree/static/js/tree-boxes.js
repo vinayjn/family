@@ -1,39 +1,10 @@
-/***************************************************************
- *
- *  Copyright (C) 2016 Swayvil <swayvil@gmail.com>
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- ***************************************************************/
-
-/*
- * Dependencies:
- * - d3.js
- * - jquery.js
- */
 "use strict";
 
 function treeBoxes(urlService, jsonData)
 {
 	var urlService_ = '';
 	
-	var blue = '#337ab7',
-		green = '#5cb85c',
-		yellow = '#f0ad4e',
-		blueText = '#4ab1eb',
-		purple = '#9467bd';
-
+	var colors = ['#337ab7','#5cb85c','#0ebcaa','#cea24a', "#4d54ea"];
 	var margin = {
 					top : 0,
 					right : 0,
@@ -98,14 +69,7 @@ function treeBoxes(urlService, jsonData)
 		var maxTreeWidth = breadthFirstTraversal(tree.nodes(root), function(currentLevel) {
 			maxDepth++;
 			currentLevel.forEach(function(node) {
-				if (node.type == 'type1')
-					node.color = blue;
-				if (node.type == 'type2')
-					node.color = green;
-				if (node.type == 'type3')
-					node.color = yellow;
-				if (node.type == 'type4')
-					node.color = purple;
+				node.color = colors[parseInt(node.type.split("type")[1])];				
 				});
 			});
 		height = maxTreeWidth * (rectNode.height + 20) + tooltip.height + 20 - margin.right - margin.left;
@@ -165,8 +129,6 @@ function treeBoxes(urlService, jsonData)
 		nodes.forEach(function(d) {
 			d.y = d.depth * (rectNode.width * 1.5);
 		});
-	
-	// 1) ******************* Update the nodes *******************
 		var node = nodeGroup.selectAll('g.node').data(nodes, function(d) {
 			return d.id || (d.id = ++i);
 		});
@@ -174,11 +136,6 @@ function treeBoxes(urlService, jsonData)
 			return d.id || (d.id = ++i);
 		});
 	
-		// Enter any new nodes at the parent's previous position
-		// We use "insert" rather than "append", so when a new child node is added (after a click)
-		// it is added at the top of the group, so it is drawed first
-		// else the nodes tooltips are drawed before their children nodes and they
-		// hide them
 		var nodeEnter = node.enter().insert('g', 'g.node')
 		.attr('class', 'node')
 		.attr('transform', function(d) {
@@ -217,48 +174,12 @@ function treeBoxes(urlService, jsonData)
 							+ d.nodeName
 							+ '</div>';
 				})
-		.on('mouseover', function(d) {
-			$('#nodeInfoID' + d.id).css('visibility', 'visible');
-			$('#nodeInfoTextID' + d.id).css('visibility', 'visible');
-		})
-		.on('mouseout', function(d) {
-			$('#nodeInfoID' + d.id).css('visibility', 'hidden');
-			$('#nodeInfoTextID' + d.id).css('visibility', 'hidden');
-		});
-	
-		nodeEnterTooltip.append("rect")
-		.attr('id', function(d) { return 'nodeInfoID' + d.id; })
-    	.attr('x', rectNode.width / 2)
-		.attr('y', rectNode.height / 2)
-		.attr('width', tooltip.width)
-		.attr('height', tooltip.height)
-    	.attr('class', 'tooltip-box')
-    	.style('fill-opacity', 0.8)
-		.on('mouseover', function(d) {
-			$('#nodeInfoID' + d.id).css('visibility', 'visible');
-			$('#nodeInfoTextID' + d.id).css('visibility', 'visible');
-			removeMouseEvents();
-		})
-		.on('mouseout', function(d) {
-			$('#nodeInfoID' + d.id).css('visibility', 'hidden');
-			$('#nodeInfoTextID' + d.id).css('visibility', 'hidden');
-			reactivateMouseEvents();
-		});
 
-		nodeEnterTooltip.append("text")
-		.attr('id', function(d) { return 'nodeInfoTextID' + d.id; })
-    	.attr('x', rectNode.width / 2 + tooltip.textMargin)
-		.attr('y', rectNode.height / 2 + tooltip.textMargin * 2)
-		.attr('width', tooltip.width)
-		.attr('height', tooltip.height)
-		.attr('class', 'tooltip-text')
-		.style('fill', 'white')
-		.append("tspan")
-	    .text(function(d) {return 'Name: ' + d.name;})
-	    .append("tspan")
-	    .attr('x', rectNode.width / 2 + tooltip.textMargin)
-	    .attr('dy', '1.5em')
-	    .text(function(d) {return 'Info: ' + d.label;});
+		.on('mouseout', function(d) {
+			$('#nodeInfoID' + d.id).css('visibility', 'hidden');
+			$('#nodeInfoTextID' + d.id).css('visibility', 'hidden');
+		});
+			
 
 		// Transition nodes to their new position.
 		var nodeUpdate = node.transition().duration(duration)

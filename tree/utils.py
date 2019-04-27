@@ -20,7 +20,7 @@ def get_json(root, members, node_id, depth):
 	children = sorted(list(filter(lambda x: x.parent == root, members)), key=lambda x: x.id)
 	for index, child in enumerate(children):
 		node_id = str(depth + 1) + "." + str(index + 1)
-		data["children"].append(get_json(child, members, node_id, depth))
+		data["children"].append(get_json(child, members, node_id, depth + 1))
 	return data
 
 def get_json_tree():
