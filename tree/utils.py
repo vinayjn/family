@@ -17,7 +17,7 @@ def get_json(root, members, node_id, depth):
 		"nodeName" : root.name,
 		"direction" : "ASYN"
 	}
-	children = sorted(list(filter(lambda x: x.parent == root, members)), key=lambda x: x.id)
+	children = sorted(list(filter(lambda x: x.parent == root, members)), key=lambda x: x.order)
 	for index, child in enumerate(children):
 		node_id = str(depth + 1) + "." + str(index + 1)
 		data["children"].append(get_json(child, members, node_id, depth + 1))
