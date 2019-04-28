@@ -25,6 +25,6 @@ def get_json(root, members, node_id, depth):
 
 def get_json_tree():
 	members = Member.objects.all()
-	root = members[0]
+	root = list(filter(lambda x: x.parent == None, members))[0]
 	json_data = get_json(root, members, "1", 1)	
 	return json.dumps({"tree": json_data})
