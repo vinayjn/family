@@ -72,12 +72,12 @@ function treeBoxes(urlService, jsonData)
 				node.color = colors[parseInt(node.type.split("type")[1])];				
 				});
 			});
-		height = maxTreeWidth * (rectNode.height + 20) + tooltip.height + 20 - margin.right - margin.left;
-		width = maxDepth * (rectNode.width * 1.5) + tooltip.width / 2 - margin.top - margin.bottom;
+		height = maxTreeWidth * (rectNode.height + 40) - margin.right - margin.left;
+		width = window.screen.width;
 	
 		tree = d3.layout.tree().size([ height, width ]);
 		root.x0 = height / 2;
-		root.y0 = 0;
+		root.y0 = 20;
 	
 		baseSvg = d3.select('#tree-container').append('svg')
 	    .attr('width', width + margin.right + margin.left)
